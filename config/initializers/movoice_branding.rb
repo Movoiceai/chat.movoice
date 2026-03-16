@@ -1,5 +1,5 @@
 # Force Movoice AI branding by overriding GlobalConfig at the method level
-# This bypasses both the database AND Redis cache entirely
+# Wrapped in after_initialize to ensure GlobalConfig is loaded before patching
 
 MOVOICE_BRANDING = {
   'INSTALLATION_NAME' => 'Movoice AI',
@@ -24,4 +24,6 @@ module MovoiceBrandingOverride
   end
 end
 
-GlobalConfig.singleton_class.prepend(MovoiceBrandingOverride)
+Rails.application.config.after_initialize do
+  GlobalConfig.singleton_class.prepend(MovoiceBrandingOverride) if defined?(GlobalConfig)
+end
