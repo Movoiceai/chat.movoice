@@ -1,5 +1,5 @@
 # Force Movoice AI branding on every startup
-# This overrides the database values set during initial Chatwoot seeding
+# Clears Redis GlobalConfig cache so new values are served immediately
 
 Rails.application.config.after_initialize do
   branding = {
@@ -17,4 +17,10 @@ Rails.application.config.after_initialize do
   rescue StandardError => e
     Rails.logger.warn "[Movoice] Could not update #{name}: #{e.message}"
   end
+
+  # Clear Redis cache so updated values are served immediately
+  GlobalConfig.clear_cache
+  Rails.logger.info '[Movoice] Branding applied and GlobalConfig cache cleared'
+rescue StandardError => e
+  Rails.logger.warn "[Movoice] Branding init failed: #{e.message}"
 end
