@@ -103,6 +103,11 @@ export default {
   created() {
     if (this.ssoAuthToken) {
       this.submitLogin();
+    } else {
+      // No SSO token — this is a direct login attempt.
+      // Redirect to Movoice AI dashboard instead of showing the login form.
+      window.location.replace('https://movoice.ai');
+      return;
     }
     if (this.authError) {
       const messageKey = ERROR_MESSAGES[this.authError] ?? 'LOGIN.API.UNAUTH';
