@@ -26,4 +26,20 @@ end
 
 Rails.application.config.after_initialize do
   GlobalConfig.singleton_class.prepend(MovoiceBrandingOverride) if defined?(GlobalConfig)
+
+  # Unlock all EE features by making the app appear as enterprise
+  if defined?(ChatwootApp)
+    ChatwootApp.instance_eval do
+      def self.enterprise?
+        true
+      end
+    end
+  end
+
+  # Set pricing plan to enterprise so all EE features are unlocked
+  if defined?(InstallationConfig)
+    config = InstallationConfig.find_or_initialize_by(name: 'INSTALLATION_PRICING_PLAN')
+    config.value = 'enterprise' unless config.value == 'enterprise'
+    config.save if config.changed?
+  end
 end
