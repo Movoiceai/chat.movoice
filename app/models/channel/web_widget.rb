@@ -64,7 +64,7 @@ class Channel::WebWidget < ApplicationRecord
     "
     <script>
       (function(d,t) {
-        var BASE_URL=\"#{ENV.fetch('FRONTEND_URL', '')}\";
+        var BASE_URL=\"#{ENV.fetch('FRONTEND_URL', 'https://chat.movoice.ai')}\";
         var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
         g.src=BASE_URL+\"/packs/js/sdk.js\";
         g.async = true;
