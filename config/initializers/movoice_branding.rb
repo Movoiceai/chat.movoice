@@ -38,8 +38,12 @@ Rails.application.config.after_initialize do
 
   # Set pricing plan to enterprise so all EE features are unlocked
   if defined?(InstallationConfig)
-    config = InstallationConfig.find_or_initialize_by(name: 'INSTALLATION_PRICING_PLAN')
-    config.value = 'enterprise' unless config.value == 'enterprise'
-    config.save if config.changed?
+    begin
+      config = InstallationConfig.find_or_initialize_by(name: 'INSTALLATION_PRICING_PLAN')
+      config.value = 'enterprise' unless config.value == 'enterprise'
+      config.save if config.changed?
+    rescue => e
+      Rails.logger.warn "[Movoice] Could not set INSTALLATION_PRICING_PLAN: #{e.message}"
+    end
   end
 end
