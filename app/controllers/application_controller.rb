@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
   before_action :set_current_user, unless: :devise_controller?
+  before_action :allow_movoice_iframe
   around_action :switch_locale
   around_action :handle_with_exception, unless: :devise_controller?
 
@@ -23,6 +24,11 @@ class ApplicationController < ActionController::Base
       account: Current.account,
       account_user: Current.account_user
     }
+  end
+
+  def allow_movoice_iframe
+    response.headers.delete('X-Frame-Options')
+    response.headers['Content-Security-Policy'] = "frame-ancestors 'self' https://app.movoice.ai https://*.movoice.ai https://movoice.ai"
   end
 end
 ApplicationController.include_mod_with('Concerns::ApplicationControllerConcern')
